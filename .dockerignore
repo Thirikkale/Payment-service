@@ -1,0 +1,26 @@
+# Maven target directory
+target/
+
+# IDE and editor files
+.idea/
+.project
+.classpath
+.settings/
+*.iml
+.vscode/
+
+# OS files
+*.log
+*.swp
+*.swo
+*.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Node/npm leftovers (if present)
+node_modules/
+dist/
+build/
