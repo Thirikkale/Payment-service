@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.stripe.param.SetupIntentCreateParams;
 import java.util.List;
+import java.util.stream.Collectors;
+import com.thirikkale.payment_service.dto.PaymentMethodResponse;
 
 @Service
 public class PaymentService {
@@ -116,5 +118,20 @@ public class PaymentService {
         paymentRepository.save(payment);
 
         return paymentIntent;
+    }
+
+    public List<PaymentMethodResponse> getSavedPaymentMethods(Long riderId) {
+
+        // 1. Find the rider (ensures rider exists)
+        riderRepository.findById(riderId)
+                .orElseThrow(() -> new RuntimeException("Rider not found"));
+
+        // 2. Find all cards for that rider
+        List<PaymentMethod> methods = paymentMethodRepository.findAllByRiderId(riderId);
+
+        // 3. Convert the list of entities to a list of DTOs
+        return methods.stream()
+                .map(PaymentMethodResponse::fromEntity)
+                .collect(Collectors.toList());
     }
 }

@@ -2,7 +2,7 @@
 
 package com.thirikkale.payment_service.controller;
 
-import com.stripe.model.PaymentIntent; // <-- Import this
+import com.stripe.model.PaymentIntent;
 import com.thirikkale.payment_service.dto.PaymentIntentRequest;
 import com.thirikkale.payment_service.dto.SetupIntentRequest;
 import com.thirikkale.payment_service.dto.SetupIntentResponse;
@@ -11,6 +11,8 @@ import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.thirikkale.payment_service.dto.PaymentMethodResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/payments")
@@ -47,5 +49,15 @@ public class PaymentController {
             return ResponseEntity.status(404).body(e.getMessage());
         }
         // ---------------------------------------------
+    }
+
+    @GetMapping("/methods/{riderId}")
+    public ResponseEntity<List<PaymentMethodResponse>> getPaymentMethods(@PathVariable Long riderId) {
+        try {
+            List<PaymentMethodResponse> methods = paymentService.getSavedPaymentMethods(riderId);
+            return ResponseEntity.ok(methods);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(null); // e.g., Rider not found
+        }
     }
 }
