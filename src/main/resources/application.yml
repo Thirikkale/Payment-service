@@ -13,5 +13,11 @@ spring:
 
 stripe:
   secret-key: sk_test_51RhrJFQG7rOc3vsQQItx5oHKlUj8F193sbyNfGrQyis6Tjx7qEbk1ZEY4fQwsIkaOzPytgo5RhzUGPqSSfvk9o5m00E2JqEmUz
-  webhook-secret: whsec_27807a5024a899f1e1a0c0e02b6a79ab577d7a3aa07077d4e3f759ec09576651
+  webhook-secret:  whsec_27807a5024a899f1e1a0c0e02b6a79ab577d7a3aa07077d4e3f759ec09576651
 
+logging:
+  level:
+    # Set the root logger to INFO
+    root: INFO
+    # Or, just for your application:
+    com.thirikkale.payment_service: INFO
