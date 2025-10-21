@@ -9,7 +9,7 @@ import java.util.List;
 public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, Long> {
 
      // Finds a payment method for a rider
-    Optional<PaymentMethod> findByRiderId(Long riderId);
+    Optional<PaymentMethod> findByRiderId(String riderId);
 
-    List<PaymentMethod> findAllByRiderId(Long riderId);
+    List<PaymentMethod> findAllByRiderId(String riderId);
 }

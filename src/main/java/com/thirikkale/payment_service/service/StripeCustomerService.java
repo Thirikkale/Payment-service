@@ -22,34 +22,39 @@ public class StripeCustomerService {
     /**
      * Finds or creates a local Rider mapping entry and ensures a Stripe Customer ID exists.
      * This service assumes the riderId is valid as it comes from another service.
+     * Accepts riderId as a String, but assumes the local Rider entity uses a Long ID.
      */
     @Transactional
-    public String findOrCreateCustomer(Long riderId) throws StripeException {
+    public String findOrCreateCustomer(String riderIdStr) throws StripeException { // Parameter name changed for clarity
 
-        // 1. Try to find the rider mapping in this service's DB
-        Optional<Rider> optionalRider = riderRepository.findById(riderId);
+
+        // --------------------------------------------------------
+
+        // 1. Try to find the rider mapping using the parsed Long ID
+        Optional<Rider> optionalRider = riderRepository.findById(riderIdStr); // Use the Long ID
 
         if (optionalRider.isPresent()) {
             // 2. RIDER MAPPING EXISTS
-            // this record is guaranteed to have a stripeCustomerId from a previous successful run.
             return optionalRider.get().getStripeCustomerId();
         }
 
         // 3. RIDER MAPPING DOES NOT EXIST (First time seeing this rider)
+
         // 3a. Create a new Customer in Stripe
         CustomerCreateParams params = CustomerCreateParams.builder()
-                .putMetadata("app_rider_id", riderId.toString())
+                // Use the ORIGINAL String ID received from the app for Stripe metadata
+                .putMetadata("app_rider_id", riderIdStr)
                 .build();
         Customer customer = Customer.create(params);
         String stripeId = customer.getId();
 
         // 3b. Create and save the new local mapping entry
         Rider newRiderMapping = new Rider();
-        newRiderMapping.setId(riderId);
+        newRiderMapping.setId(riderIdStr); // Set the Long ID for the entity
         newRiderMapping.setStripeCustomerId(stripeId);
         riderRepository.save(newRiderMapping);
 
-        // 3c. Return the new ID
+        // 3c. Return the new Stripe ID
         return stripeId;
     }
 }

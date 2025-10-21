@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class Rider {
     @Id
-    private Long id;
+    private String id;
 
     @Column(name = "stripe_customer_id", unique = true)
     private String stripeCustomerId;

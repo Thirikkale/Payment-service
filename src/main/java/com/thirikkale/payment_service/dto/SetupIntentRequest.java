@@ -6,5 +6,5 @@ import lombok.Data;
 
 @Data
 public class SetupIntentRequest {
-    private Long riderId;
+    private String riderId;
 }
